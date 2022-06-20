@@ -9,7 +9,7 @@ router.get('/', getFacturas)
 
 router.get('/:id', getFactura)
 
-router.post('/', crearFactura)
+router.post('/new', crearFactura)
 
 router.delete('/:id', eliminarFactura)
 
