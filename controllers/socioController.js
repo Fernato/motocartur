@@ -93,7 +93,7 @@ const eliminarSocio = async ( req, res = response) => {
 
         const {id} = req.params;
 
-        let socio = await socioModel.findOne({id})
+        let socio = await socioModel.findOne({_id:id})
 
         if(!socio){
             return res.status(400).json({
@@ -102,7 +102,7 @@ const eliminarSocio = async ( req, res = response) => {
             })
         }
 
-        await socioModel.deleteOne({id})
+        await socioModel.deleteOne({_id:id})
     
         res.status(200).json({
             ok: true
@@ -123,7 +123,7 @@ const actualizarSocio = async ( req, res = response) => {
         
         const {id} = req.params;
 
-        let socio = await socioModel.findOne({id})
+        let socio = await socioModel.findOne({_id:id})
 
         if(!socio){
             return res.status(400).json({
@@ -132,7 +132,7 @@ const actualizarSocio = async ( req, res = response) => {
             })
         }
 
-        await socioModel.updateOne({id}, req.body)
+        await socioModel.updateOne({_id:id}, req.body)
     
         res.status(200).json({
             ok: true
