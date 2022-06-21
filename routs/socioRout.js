@@ -1,9 +1,9 @@
 const {Router} = require('express');
 
 
-const router = Router()
 
 const { getSocios, getSocio, crearSocio, actualizarSocio, eliminarSocio } = require('../controllers/socioController');
+const router = Router()
 
 router.get('/', getSocios)
 
