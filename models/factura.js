@@ -14,7 +14,7 @@ const facturaSchema = Schema({
         type: String,
     },
     
-    idSocio:{
+    socio:{
         type: Schema.ObjectId,
         ref: 'socioModel'
     }

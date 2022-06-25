@@ -1,17 +1,23 @@
 const {response} = require('express');
 
 const facturaModel = require('../models/factura');
+const socioModel = require('../models/socios')
+
 
 const getFacturas = async (req, res = response) => {
 
     try {
         
-        const factura = await facturaModel.find();
+        const facturas = await facturaModel.find().populate(['socio']);
+
+        
+         
     
         res.status(200).json({
             ok: true,
-            factura
+            facturas
         })
+        
     } catch (error) {
         console.log(error)
         res.status(500).json({
@@ -56,20 +62,24 @@ const crearFactura = async ( req, res = response ) => {
 
     try {
 
-        const { _id, idSocio } = body;
 
-        let factura = await facturaModel.findOne({ _id })
+        const { cedula, descripcion, fecha, monto } = body;
 
-        if( factura ){
+        const socio = await socioModel.findOne({cedula: cedula})
+
+        if(!socio){
             return res.status(400).json({
                 ok:false,
-                msg: 'Ese socio ya existe'
+                msg: 'Ese socio no existe'
             })
         }
-
-        
-        factura = await new facturaModel(  req.body )
-        factura.idSocio = idSocio
+      
+        factura = await new facturaModel({
+            fecha: fecha,
+            descripcion: descripcion,
+            monto: monto
+        } )
+        factura.socio = socio._id
         factura.save()
        
 
