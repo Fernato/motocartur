@@ -28,6 +28,7 @@ app.use( express.json() );
 //app.use('/api/login', require('./routs/usuario'));
 app.use('/api/socio', require('./routs/socioRout'));
 app.use('/api/factura', require('./routs/facturaRout'));
+app.use('/api/usuario', require('./routs/usuarioRout'));
 
 // Escuchar peticiones
 
