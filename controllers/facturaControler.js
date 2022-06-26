@@ -10,6 +10,15 @@ const getFacturas = async (req, res = response) => {
         
         const facturas = await facturaModel.find().populate(['socio']);
 
+        facturas.sort((function (a, b) {
+            if (a.fecha > b.fecha) {
+            return 1;
+            }
+            if (a.fecha < b.fecha) {
+            return -1;
+            }
+            return 0;
+        }))
         
          
     
@@ -27,7 +36,7 @@ const getFacturas = async (req, res = response) => {
 
 }
 const getFactura = async ( req, res = response) => {
-
+    console.log('esto es getFactura')
     try {        
         const { id } = req.params;
 
@@ -43,7 +52,7 @@ const getFactura = async ( req, res = response) => {
         }
         res.status(200).json({
             ok: true,
-            socio: factura
+            factura
         })
 
     } catch (error) {
@@ -158,11 +167,40 @@ const actualizarFactura = async ( req, res = response) => {
 
 }
 
+
+const getFacturasTotal = async (req, res = response) => {
+    console.log('esto es getFacturatotal')
+    try {
+        
+        const facturas = await facturaModel.find();
+        
+        let total=0
+
+        for ( let fac of facturas){
+            total += fac.monto
+        }
+        console.log(total)
+
+        res.status(200).json({
+            ok: true,
+            total,
+         })
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            ok:false
+        })
+    }
+
+}
+
 module.exports = {
     getFacturas,
     getFactura,
     crearFactura,
     actualizarFactura,
     eliminarFactura,
+    getFacturasTotal
 
 }

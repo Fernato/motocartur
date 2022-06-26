@@ -3,11 +3,20 @@ const {response} = require('express');
 const socioModel = require('../models/socios');
 
 const getSocios = async (req, res = response) => {
-
+    
     try {
         
         const socios = await socioModel.find();
-    
+        socios.sort(function (a, b) {
+            if (a.nombre > b.nombre) {
+            return 1;
+            }
+            if (a.nombre < b.nombre) {
+            return -1;
+            }
+            return 0;
+        })
+
         res.status(200).json({
             ok: true,
             socios
@@ -21,7 +30,7 @@ const getSocios = async (req, res = response) => {
 
 }
 const getSocio = async ( req, res = response) => {
-
+   
     try {        
         const {id} = req.params;
 

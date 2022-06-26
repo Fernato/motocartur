@@ -11,7 +11,7 @@ const facturaSchema = Schema({
     },
 
     monto:{
-        type: String,
+        type: Number,
     },
     
     socio:{
