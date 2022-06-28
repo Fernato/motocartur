@@ -169,7 +169,7 @@ const actualizarFactura = async ( req, res = response) => {
 
 
 const getFacturasTotal = async (req, res = response) => {
-    console.log('esto es getFacturatotal')
+    
     try {
         
         const facturas = await facturaModel.find();
@@ -179,7 +179,7 @@ const getFacturasTotal = async (req, res = response) => {
         for ( let fac of facturas){
             total += fac.monto
         }
-        console.log(total)
+       
 
         res.status(200).json({
             ok: true,
@@ -195,12 +195,65 @@ const getFacturasTotal = async (req, res = response) => {
 
 }
 
+const getCuentasIndividualesSocios = async (req, res = response ) => {
+    try {
+        
+        const socios = await socioModel.find();
+
+        let listSoc=[]
+
+        for (let soc of socios){
+            let socio={cedula: '', nombre: '', monto:0}
+            let facturas = await facturaModel.find({socio:{$all:[soc._id]}})
+            socio.cedula = soc.cedula
+            socio.nombre = soc.nombre
+
+            let suma = 0
+            for(fac of facturas){
+                suma += fac.monto
+            }
+
+            socio.monto=suma
+           
+            listSoc.push(socio)
+        }
+
+        let total = 0
+
+        for (let soc of listSoc){
+            total += soc.monto
+        }
+
+        listSoc.sort((function (a, b) {
+            if (a.nombre > b.nombre) {
+            return 1;
+            }
+            if (a.nombre < b.nombre) {
+            return -1;
+            }
+            return 0;
+        }))
+
+        res.status(200).json({
+            ok: true,
+            listSoc,
+            total
+        })
+
+    } catch (error) {
+
+        console.log(error)
+        
+    }
+}
+
 module.exports = {
     getFacturas,
     getFactura,
     crearFactura,
     actualizarFactura,
     eliminarFactura,
-    getFacturasTotal
+    getFacturasTotal,
+    getCuentasIndividualesSocios
 
 }
