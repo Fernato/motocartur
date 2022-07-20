@@ -41,6 +41,7 @@ const getFactura = async ( req, res = response) => {
         const { id } = req.params;
 
         const factura = await facturaModel.findOne({id})
+        
 
         if( !factura ){
 
@@ -50,9 +51,50 @@ const getFactura = async ( req, res = response) => {
             })
 
         }
+        
         res.status(200).json({
             ok: true,
             factura
+            
+        })
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            ok:false
+        })
+        
+    }
+}
+
+const getFacturasSocio = async ( req, res = response) => {
+
+    try {        
+        const { id } = req.params;
+
+        const facturas = await facturaModel.find({socio: id}).populate(['socio'])
+
+        if( !facturas ){
+
+            return res.status(400).json({
+                ok:false,
+                msg: 'Ese factura no existe'
+            })
+
+        }
+
+        let total = 0
+
+        for(let fac of facturas){
+            total += fac.monto
+        }
+
+        const socio = await socioModel.findById(id)
+        res.status(200).json({
+            ok: true,
+            facturas,
+            socio,
+            total
         })
 
     } catch (error) {
@@ -203,8 +245,9 @@ const getCuentasIndividualesSocios = async (req, res = response ) => {
         let listSoc=[]
 
         for (let soc of socios){
-            let socio={cedula: '', nombre: '', monto:0}
+            let socio={id:'', cedula: '', nombre: '', monto:0}
             let facturas = await facturaModel.find({socio:{$all:[soc._id]}})
+            socio.id = soc.id
             socio.cedula = soc.cedula
             socio.nombre = soc.nombre
 
@@ -254,6 +297,7 @@ module.exports = {
     actualizarFactura,
     eliminarFactura,
     getFacturasTotal,
-    getCuentasIndividualesSocios
+    getCuentasIndividualesSocios,
+    getFacturasSocio
 
 }
