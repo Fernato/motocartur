@@ -1,0 +1,14 @@
+const {Router} = require('express');
+
+
+
+
+const {getCaja} = require('../controllers/cajaFerneyController')
+
+const router = Router()
+
+router.get('/', getCaja)
+
+
+
+module.exports = router;

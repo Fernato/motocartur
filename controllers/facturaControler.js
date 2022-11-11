@@ -20,11 +20,15 @@ const getFacturas = async (req, res = response) => {
             return 0;
         }))
         
-         
+        suma = 0
+        for (let fac of facturas){
+            suma += fac.monto
+        }
     
         res.status(200).json({
             ok: true,
-            facturas
+            facturas,
+            suma
         })
         
     } catch (error) {
@@ -133,10 +137,11 @@ const crearFactura = async ( req, res = response ) => {
         factura.socio = socio._id
         factura.save()
        
+        factura.socio = socio
 
         res.status(201).json({
             ok: true,
-            socio: factura
+            factura
         })
 
 
@@ -155,7 +160,7 @@ const eliminarFactura = async ( req, res = response) => {
 
         const { id } = req.params;
 
-        let factura = await facturaModel.findOne({ id })
+        let factura = await facturaModel.findOne({ _id : id })
 
         if( !factura ){
             return res.status(400).json({
@@ -164,7 +169,7 @@ const eliminarFactura = async ( req, res = response) => {
             })
         }
 
-        await facturaModel.deleteOne({id})
+        await facturaModel.deleteOne({_id: id})
     
         res.status(200).json({
             ok: true
@@ -185,7 +190,7 @@ const actualizarFactura = async ( req, res = response) => {
         
         const { id } = req.params;
 
-        let factura = await facturaModel.findOne({ id })
+        let factura = await facturaModel.findOne({ _id: id  })
 
         if(!factura){
             return res.status(400).json({
@@ -193,8 +198,12 @@ const actualizarFactura = async ( req, res = response) => {
                 msg: 'Ese factura no existe'
             })
         }
+        cuerpo = {
+            descripcion: req.body.descripcion,
+            monto: req.body.monto
+        }
 
-        await facturaModel.updateOne({ id }, req.body)
+        await facturaModel.updateOne({ _id: id  }, cuerpo)
     
         res.status(200).json({
             ok: true
@@ -206,6 +215,7 @@ const actualizarFactura = async ( req, res = response) => {
             ok:false
         })
     }
+    
 
 }
 
