@@ -34,6 +34,8 @@ app.use('/api/caja', require('./routs/cajaRout'));
 app.use('/api/ingresoferney', require('./routs/ingresoFerneyRout'));
 app.use('/api/egresoferney', require('./routs/egresoFerneyRout'));
 app.use('/api/cajaferney', require('./routs/cajaFerneyRout'));
+
+
 // Escuchar peticiones
 
 const port = process.env.PORT || 5000;

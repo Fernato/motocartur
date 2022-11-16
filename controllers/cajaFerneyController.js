@@ -8,16 +8,41 @@ const ingresoModel = require('../models/ingresoFerney');
 const sumaEgresos = async () => {
 
     try {
-        
-        const egresos = await egresoModel.find();
 
-        suma = 0
-
-        for (egr of egresos){
-            suma += egr.monto
+        let totalEgresos = {
+            nequi:0,
+            bancolombia:0,
+            efectivo:0,
+            total:0,
         }
+        
+        let sumanequi = 0
+        const egresosNequi = await egresoModel.find({fuente:{$all:['NEQUI']}}); 
+        egresosNequi.map(en=>{
+            sumanequi += en.monto
+        })
 
-        return suma
+        let sumaefectivo = 0
+        const egresosEfectivo = await egresoModel.find({fuente:{$all:['EFECTIVO']}}); 
+        egresosEfectivo.map(en=>{
+            sumaefectivo += en.monto
+        })
+
+        let sumaban = 0
+        const egresosBanc = await egresoModel.find({fuente:{$all:['BANCOLOMBIA']}}); 
+        egresosBanc.map(en=>{
+            sumaban += en.monto
+        })
+
+       
+  
+
+        totalEgresos.nequi = sumanequi
+        totalEgresos.bancolombia = sumaban
+        totalEgresos.efectivo = sumaefectivo
+        totalEgresos.total = sumanequi + sumaban + sumaefectivo
+
+        return totalEgresos
         
     } catch (error) {
         console.log(error)
@@ -32,13 +57,37 @@ const sumaIngresos = async () => {
 
     try {
         
-        const ingresos = await ingresoModel.find();
-        
-        suma = 0
-        for (let fac of ingresos){
-            suma += fac.monto
+       let totalIngresos = {
+            nequi:0,
+            bancolombia:0,
+            efectivo:0,
+            total:0
         }
-        return suma
+        
+        let sumanequi = 0
+        const egresosNequi = await ingresoModel.find({fuente:{$all:['NEQUI']}}); 
+        egresosNequi.map(en=>{
+            sumanequi += en.monto
+        })
+
+        let sumaefectivo = 0
+        const egresosEfectivo = await ingresoModel.find({fuente:{$all:['EFECTIVO']}}); 
+        egresosEfectivo.map(en=>{
+            sumaefectivo += en.monto
+        })
+
+        let sumaban = 0
+        const egresosBanc = await ingresoModel.find({fuente:{$all:['BANCOLOMBIA']}}); 
+        egresosBanc.map(en=>{
+            sumaban += en.monto
+        })
+
+        totalIngresos.nequi = sumanequi
+        totalIngresos.bancolombia = sumaban
+        totalIngresos.efectivo = sumaefectivo
+        totalIngresos.total = sumanequi + sumaban + sumaefectivo
+
+        return totalIngresos
 
     } catch (error) {
         console.log(error)
@@ -57,13 +106,24 @@ const getCaja = async (req, res = response) => {
         const sumIngresos = await sumaIngresos()
         const sumEgresos = await sumaEgresos()
 
-        const totalCaja = sumIngresos - sumEgresos
+        const total = sumIngresos.total - sumEgresos.total
+
+        const nequi = sumIngresos.nequi - sumEgresos.nequi
+        const efectivo = sumIngresos.efectivo - sumEgresos.efectivo
+        const bancolombia = sumIngresos.bancolombia - sumEgresos.bancolombia
+
+        const caja ={
+            nequi,
+            bancolombia, 
+            efectivo,
+            total
+        }
 
         res.status(200).json({
             ok: true,
             sumIngresos,
             sumEgresos,
-            totalCaja
+            caja,
         })
         
     } catch (error) {

@@ -1,6 +1,5 @@
 const {response} = require('express');
 
-
 const egresoFerneyModel = require('../models/egresoFerney')
 
 const getEgresosFerney = async (req, res = response) => {
@@ -47,13 +46,13 @@ const crearEgresoFerney = async ( req, res = response ) => {
 
     try {
 
-        const { descripcion, fecha, monto } = body;
-
+        const { descripcion, fecha, monto, fuente } = body;
       
         egreso = await new egresoFerneyModel({
             fecha: fecha,
             descripcion: descripcion,
-            monto: monto
+            monto: monto,
+            fuente: fuente
         } )
 
         egreso.save()

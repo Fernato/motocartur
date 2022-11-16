@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkmotocarturv"]=self["webpackChunkmotocarturv"]||[]).push([[570],{5170:function(r,n,t){t.r(n),t.d(n,{default:function(){return s}});var u=t(3396);function e(r,n,t,e,a,o){const c=(0,u.up)("Navbar"),s=(0,u.up)("router-view");return(0,u.wg)(),(0,u.iD)(u.HY,null,[(0,u.Wm)(c),(0,u.Wm)(s)],64)}var a={components:{Navbar:(0,u.RC)((()=>t.e(595).then(t.bind(t,3595))))}},o=t(89);const c=(0,o.Z)(a,[["render",e]]);var s=c}}]);
+//# sourceMappingURL=ferney.a87003e0.js.map

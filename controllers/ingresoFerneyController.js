@@ -4,7 +4,6 @@ const {response} = require('express');
 const ingresoFerneyModel = require('../models/ingresoFerney')
 
 
-
 const crearIngresoFerney = async ( req, res = response ) => {
 
     const {body} = req
@@ -12,17 +11,17 @@ const crearIngresoFerney = async ( req, res = response ) => {
 
     try {
 
-        const { descripcion, fecha, monto } = body;
-
+        const { descripcion, fecha, monto, fuente } = body;
       
         ingreso = await new ingresoFerneyModel({
             fecha: fecha,
             descripcion: descripcion,
-            monto: monto
+            monto: monto,
+            fuente: fuente
         } )
 
         ingreso.save()
-       
+ 
         res.status(201).json({
             ok: true,
             ingreso
